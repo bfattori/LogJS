@@ -4,7 +4,9 @@
         ERROR: 'ERROR',
         WARN: 'WARN',
         INFO: 'INFO',
-        TRACE: 'TRACE'
+        TRACE: 'TRACE',
+
+        version: 'LogJS v1.0.0'
     };
 
     var appenders = {};

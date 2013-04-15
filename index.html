@@ -3,10 +3,25 @@
     <title>LogJS Functional Testing</title>
     <script type='text/javascript' src='log.js'></script>
 
+    <script type='text/javascript'>
+        LogJS.config.DOMAppender = {
+            fontSize: '9pt'
+        }
+    </script>
+
     <script type='text/javascript' src='appenders/dom.js'></script>
     <script type='text/javascript' src='appenders/console.js'></script>
 </head>
 <body>
     LogJS Function Test
+
+    <script type='text/javascript'>
+        LogJS.info(LogJS.version);
+        LogJS.warn('A warning message!');
+        LogJS.error('An error message with a url', 'https://github.com/bfattori/LogJS');
+        LogJS.warn('A warning with a url and line number', 'https://github.com/bfattori/LogJS', 100);
+        LogJS.info('');
+        LogJS.info('Done logging');
+    </script>
 </body>
 </html>
