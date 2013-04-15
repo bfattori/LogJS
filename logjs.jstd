@@ -1,0 +1,9 @@
+server: localhost:9876
+
+load:
+  - test/jasmine-1.1.0.js
+  - test/JasmineAdapter-1.1.2.js
+  - log.js
+
+test:
+  - test/log_spec.js
