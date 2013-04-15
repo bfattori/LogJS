@@ -19,4 +19,19 @@ describe('Console Appender', function() {
         expect(window.console.warn).toHaveBeenCalledWith(jasmine.any(Date), 'Warning message');
         expect(window.console.info).toHaveBeenCalledWith(jasmine.any(Date), 'Info message');
     });
+
+    it('should include a url if provided', function() {
+        spyOn(window.console, 'error');
+
+        LogJS.error('Error message', 'http://foo.com/bar');
+        expect(window.console.error).toHaveBeenCalledWith(jasmine.any(Date), 'Error message', 'http://foo.com/bar');
+    });
+
+    it('should include a line number if provided', function() {
+        spyOn(window.console, 'error');
+
+        LogJS.error('Error message', 'http://foo.com/bar', 50);
+        expect(window.console.error).toHaveBeenCalledWith(jasmine.any(Date), 'Error message', 'http://foo.com/bar', 50);
+    });
+
 });

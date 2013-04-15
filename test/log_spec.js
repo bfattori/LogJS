@@ -4,6 +4,13 @@ describe('LogJS', function() {
         expect(LogJS).toBeDefined();
     });
 
+    it('should have 4 logging levels', function() {
+        expect(LogJS.ERROR).toBe('ERROR');
+        expect(LogJS.WARN).toBe('WARN');
+        expect(LogJS.INFO).toBe('INFO');
+        expect(LogJS.TRACE).toBe('TRACE');
+    });
+
     it('should have 3 logging methods', function() {
         expect(LogJS.error).toBeDefined();
         expect(LogJS.warn).toBeDefined();
@@ -38,7 +45,7 @@ describe('LogJS', function() {
         });
 
         it('should register a new appender', function() {
-            LogJS.addAppender(new DummyAppender());
+            LogJS.addAppender(DummyAppender);
             expect(LogJS.addAppender).toHaveBeenCalled();
             expect(LogJS.getRegisteredAppenders().length).toBeGreaterThan(0);
         });
@@ -56,7 +63,7 @@ describe('LogJS', function() {
             FakeAppender.prototype.log = function(type, timestamp, message, url, lineNumber) {
             };
 
-            LogJS.addAppender(new FakeAppender());
+            LogJS.addAppender(FakeAppender);
             expect(LogJS.getRegisteredAppenders().length).toBe(0);
         });
     });

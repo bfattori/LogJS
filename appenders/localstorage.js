@@ -1,21 +1,23 @@
 (function(LogJS, global, undefined) {
 
-    var LocalStorageAppender = function() {
+    var LocalStorageAppender = function(config) {
         LogJS.BaseAppender.call(this);
 
         // Load the current log information from localStorage
         this.logRoll = JSON.parse(global.localStorage.getItem('LogJS')) || [];
         this.logRollSize = JSON.parse(global.localStorage.getItem('LogJS_size')) || 0;
-        this.timeoutInterval = 10000;
         this.changed = false;
-        this.maxSize = 4 * 1024 * 1024; // 4 megabytes
+        this.config = {
+            timeoutInterval: this.configOpt('timeoutInterval', config, 10000),
+            maxSize: this.configOpt('timeoutInterval', config, 4 * 1024 * 1024)
+        };
 
         var LSAppender = this;
         global.setTimeout(function synchronizeLog() {
             // Serialize the log roll to localStorage every few seconds
             LSAppender.serialize();
-            global.setTimeout(synchronizeLog, LSAppender.timeoutInterval);
-        }, this.timeoutInterval);
+            global.setTimeout(synchronizeLog, LSAppender.config.timeoutInterval);
+        }, this.config.timeoutInterval);
     };
 
     LocalStorageAppender.prototype = Object.create(LogJS.BaseAppender.prototype);
@@ -29,7 +31,7 @@
         this.logRoll.push(logObject);
 
         // Keep the log roll to a maximum size of items
-        while (this.logRollSize > this.maxSize) {
+        while (this.logRollSize > this.config.maxSize) {
             var logMsg = this.logRoll.shift();
             this.logRollSize -= JSON.stringify(logMsg).length;
         }
@@ -49,7 +51,7 @@
     };
 
     if (global.localStorage) {
-        LogJS.addAppender(new LocalStorageAppender());
+        LogJS.addAppender(LocalStorageAppender);
     }
 
 })(LogJS, this);

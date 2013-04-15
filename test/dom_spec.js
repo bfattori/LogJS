@@ -11,11 +11,27 @@ describe('DOM Appender', function() {
         expect(logConsole).toBeDefined();
     });
 
-    it('should log a message to the DOM console', function() {
+    it('should log an error message to the DOM console', function() {
         var appender = LogJS.getAppender('DOMAppender');
         spyOn(appender, 'logLine');
 
         LogJS.error('An error');
         expect(appender.logLine).toHaveBeenCalledWith('error', jasmine.any(String));
+    });
+
+    it('should log a warning message to the DOM console', function() {
+        var appender = LogJS.getAppender('DOMAppender');
+        spyOn(appender, 'logLine');
+
+        LogJS.warn('A warning');
+        expect(appender.logLine).toHaveBeenCalledWith('warning', jasmine.any(String));
+    });
+
+    it('should log an info message to the DOM console', function() {
+        var appender = LogJS.getAppender('DOMAppender');
+        spyOn(appender, 'logLine');
+
+        LogJS.info('An info');
+        expect(appender.logLine).toHaveBeenCalledWith('info', jasmine.any(String));
     });
 });

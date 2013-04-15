@@ -1,9 +1,12 @@
 (function(LogJS, global, undefined) {
 
-    var CORSAppender = function() {
+    var CORSAppender = function(config) {
         LogJS.BaseAppender.call(this);
-        this.targetUrl = 'http://foo.bar.com/cors_receiver';
         this.xhr = new global.XMLHttpRequest();
+
+        this.config = {
+            targetUrl: this.configOpt('targetUrl', config, '')
+        };
     };
 
     CORSAppender.prototype = Object.create(LogJS.BaseAppender.prototype);
@@ -14,20 +17,16 @@
         var logObject = { 't': type, 'ts': timestamp, 'm': message, 'u': url, 'l': lineNumber};
         var jsonString = JSON.stringify(logObject);
 
-        this.xhr.open('POST', this.targetUrl, true);
-        this.xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
-        this.xhr.setRequestHeader("Content-length", jsonString.length);
-        this.xhr.onload = this.handleResult;
-        this.xhr.send(jsonString);
-    };
-
-    CORSAppender.prototype.handleResult = function() {
-        var result = JSON.parse(this.xhr.responseText);
-
+        if (this.config.targetUrl !== '') {
+            this.xhr.open('POST', this.config.targetUrl, true);
+            this.xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+            this.xhr.setRequestHeader("Content-length", jsonString.length);
+            this.xhr.send(jsonString);
+        }
     };
 
     if (global.XMLHttpRequest && ('withCredentials' in global.XMLHttpRequest)) {
-        LogJS.addAppender(new CORSAppender());
+        LogJS.addAppender(CORSAppender);
     }
 
 })(LogJS, this);

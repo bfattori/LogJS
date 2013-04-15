@@ -45,9 +45,14 @@
         log(LogJS.INFO, message, url, lineNumber);
     };
 
+    // --------------------------------------------------------------------------------------------------
+
     LogJS.addAppender = function(appender) {
-        if (appender !== undefined && appender.LOGJSAPPENDER) {
-            appenders[appender.name] = appender;
+        if (appender !== undefined) {
+            appender = new appender(LogJS.config);
+            if (appender.LOGJSAPPENDER) {
+                appenders[appender.name] = appender;
+            }
         }
     };
 
@@ -71,13 +76,17 @@
         return registered;
     };
 
+    Object.defineProperty(LogJS, 'config', {
+        configurable: false,
+        value: {},
+        writable: true,
+        enumerable: false
+    });
+
     // --------------------------------------------------------------------------------------------------
     // --------------------------------------------------------------------------------------------------
 
     LogJS.BaseAppender = function() {
-    };
-
-    LogJS.BaseAppender.prototype.log = function(type, message, url, lineNumber) {
     };
 
     Object.defineProperty(LogJS.BaseAppender.prototype, 'LOGJSAPPENDER', {
@@ -86,6 +95,13 @@
         writable: false,
         enumerable: false
     });
+
+    LogJS.BaseAppender.prototype.log = function(type, message, url, lineNumber) {
+    };
+
+    LogJS.BaseAppender.prototype.configOpt = function(key, config, optValue) {
+        return (config[this.name] && config[this.name][key]) || optValue;
+    };
 
     Object.defineProperty(LogJS.BaseAppender.prototype, 'name', {
         configurable: false,

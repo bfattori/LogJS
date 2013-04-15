@@ -32,7 +32,7 @@
     };
 
     if (global.console) {
-        LogJS.addAppender(new ConsoleAppender());
+        LogJS.addAppender(ConsoleAppender);
     }
 
 })(LogJS, this);

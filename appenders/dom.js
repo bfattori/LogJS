@@ -80,7 +80,7 @@
     };
 
     if (global.document.createElement) {
-        LogJS.addAppender(new DOMAppender());
+        LogJS.addAppender(DOMAppender);
     }
 
 })(LogJS, this);

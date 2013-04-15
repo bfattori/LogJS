@@ -9,7 +9,7 @@ describe('LocalStorage Appender', function() {
     it('should call the logging method and serialize it immediately for an error', function() {
         spyOn(window.localStorage, 'setItem');
 
-        var appender = LogJS.getAppender(LogJS.getRegisteredAppenders()[0]);
+        var appender = LogJS.getAppender('LocalStorageAppender');
         spyOn(appender, 'serialize').andCallThrough();
         spyOn(appender, 'log').andCallThrough();
 
