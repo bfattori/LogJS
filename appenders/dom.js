@@ -176,8 +176,7 @@
     };
 
     DOMAppender.prototype.logLine = function(styleClass, text) {
-        var logLine = global.document.createElement('div');
-        logLine.className = styleClass;
+        var logLine = domEl('div', styleClass);
         logLine.innerHTML = text;
         this.logDiv.appendChild(logLine);
     };
