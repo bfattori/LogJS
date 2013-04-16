@@ -1,5 +1,39 @@
 (function(LogJS, global, undefined) {
 
+    function domEl(type, className, styles, attributes) {
+        var el = global.document.createElement(type);
+        el.className = className || '';
+        styles = styles || {};
+        attributes = attributes || {};
+        for (var style in styles) {
+            if (styles.hasOwnProperty(style)) {
+                el.style[style] = styles[style];
+            }
+        }
+        for (var attribute in attributes) {
+            if (attributes.hasOwnProperty(attribute)) {
+                el.setAttribute(attribute, attributes[attribute]);
+            }
+        }
+        return el;
+    }
+
+    function addClass(el, className) {
+        var classes = el.className.split(' ');
+        if (classes.indexOf(className) == -1) {
+            classes.push(className);
+            el.className = classes.join(' ');
+        }
+    }
+
+    function removeClass(el, className) {
+        var classes = el.className.split(' '), classIdx = classes.indexOf(className);
+        if (classIdx != -1) {
+            classes.splice(classIdx, 1);
+            el.className = classes.join(' ');
+        }
+    }
+
     var DOMAppender = function(config) {
         LogJS.BaseAppender.call(this);
 
@@ -8,19 +42,19 @@
             fontSize: this.configOpt('fontSize', config, '10pt')
         };
 
-        var logger = global.document.createElement("div");
+        var logger = domEl('div', 'logjs_logger', {
+            position: 'fixed', bottom: '0',
+            height: '250px', left: '0',
+            right: '0', backgroundColor: '#999'
+        });
         logger.id = 'LogJSLoggerConsole';
-        logger.className = 'logjs_logger';
-        logger.style.position = 'fixed';
-        logger.style.bottom = '0';
-        logger.style.height = '250px';
-        logger.style.left = '0';
-        logger.style.right = '0';
-        logger.style.backgroundColor = '#999';
 
-        var hideButton = global.document.createElement("input");
-        hideButton.setAttribute('type', 'button');
-        hideButton.setAttribute('value', 'Hide');
+        var hideButton = domEl('input', '', {
+            position: 'absolute', top: '5px',
+            right: '5px'            
+        }, {
+            'type': 'button', 'value': 'Hide'
+        });
         hideButton.onclick = function() {
             if (this.value === 'Hide') {
                 logger.style.height = '30px';
@@ -30,27 +64,90 @@
                 this.value = 'Hide';
             }
         };
-        hideButton.style.position = 'absolute';
-        hideButton.style.top = '5px';
-        hideButton.style.right = '5px';
         logger.appendChild(hideButton);
 
-        var logDiv = global.document.createElement("div");
-        logDiv.style.overflow = 'auto';
-        logDiv.style.position = 'absolute';
-        logDiv.style.top = '30px';
-        logDiv.style.left = '5px';
-        logDiv.style.right = '5px';
-        logDiv.style.bottom = '5px';
-        logDiv.style.border = '1px solid white';
-        logDiv.style.backgroundColor = '#333';
-        logDiv.style.fontFamily = this.config.font;
-        logDiv.style.fontSize = this.config.fontSize;
+        var infoCheck = domEl('input','', {
+            position: 'absolute', top: '5px',
+            left: '5px'
+        }, { 'type': 'checkbox' });
+        infoCheck.checked = true;
+        infoCheck.onchange = function() {
+            var loggerConsole = global.document.querySelector('#LogJSLoggerConsole');
+            if (!this.checked) {
+                addClass(loggerConsole, 'infoHide');
+            } else {
+                removeClass(loggerConsole, 'infoHide');
+            }
+        };
+        logger.appendChild(infoCheck);
+
+        var infoLabel = domEl('div', '', {
+            position: 'absolute', left: '25px',
+            top: '5px'
+        });
+        infoLabel.innerHTML = 'Information';
+        logger.appendChild(infoLabel);
+
+        var warnCheck = domEl('input','', {
+            position: 'absolute', left: '105px',
+            top: '5px'
+        }, { 'type': 'checkbox' });
+        warnCheck.checked = true;
+        warnCheck.onchange = function() {
+            var loggerConsole = global.document.querySelector('#LogJSLoggerConsole');
+            if (!this.checked) {
+                addClass(loggerConsole, 'warnHide');
+            } else {
+                removeClass(loggerConsole, 'warnHide');
+            }
+        };
+        logger.appendChild(warnCheck);
+
+        var warnLabel = domEl('div', '', {
+            position: 'absolute', left: '125px',
+            top: '5px'
+        });
+        warnLabel.innerHTML = 'Warnings';
+        logger.appendChild(warnLabel);
+
+        var errorCheck = domEl('input','', {
+            position: 'absolute', left: '195px',
+            top: '5px'
+        }, { 'type': 'checkbox' });
+        errorCheck.checked = true;
+        errorCheck.onchange = function() {
+            var loggerConsole = global.document.querySelector('#LogJSLoggerConsole');
+            if (!this.checked) {
+                addClass(loggerConsole, 'errorHide');
+            } else {
+                removeClass(loggerConsole, 'errorHide');
+            }
+        };
+        logger.appendChild(errorCheck);
+
+        var errorLabel = domEl('div', '', {
+            position: 'absolute', left: '215px',
+            top: '5px'
+        });
+        errorLabel.innerHTML = 'Errors';
+        logger.appendChild(errorLabel);
+
+        var logDiv = domEl('div', '', {
+            overflow: 'auto', position: 'absolute',
+            top: '30px', left: '5px',
+            right: '5px', bottom: '5px',
+            border: '1px solid white', backgroundColor: '#333',
+            fontFamily: this.config.font, fontSize: this.config.fontSize
+        });
         logger.appendChild(logDiv);
 
         var styles = global.document.createElement('style');
         styles.setAttribute('type', 'text/css');
-        styles.innerHTML = '.logjs_logger a { color: #aaf; } .logjs_logger a:visited { color: #88f; } .logjs_logger div.error { color: red; } .logjs_logger div.warning { color: yellow; } .logjs_logger div.info { color: white; }';
+        styles.innerHTML = '.logjs_logger a { color: #aaf; } .logjs_logger a:visited { color: #88f; } ' +
+            '.logjs_logger div.error { color: red; } .logjs_logger div.warning { color: yellow; } ' +
+            '.logjs_logger div.info { color: white; } #LogJSLoggerConsole.infoHide div.info { display: none; } ' +
+            '#LogJSLoggerConsole.warnHide div.warning { display: none; } ' +
+            '#LogJSLoggerConsole.errorHide div.error { display: none; } ';
 
         global.document.getElementsByTagName("head")[0].appendChild(styles);
 
