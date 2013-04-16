@@ -6,10 +6,16 @@
     <script type='text/javascript'>
         LogJS.config.DOMAppender = {
             fontSize: '9pt'
+        };
+
+        LogJS.config.CORSAppender = {
+            targetUrl: 'http://localhost:3000/logger'
         }
     </script>
 
     <script type='text/javascript' src='appenders/dom.js'></script>
+    <script type='text/javascript' src='appenders/localstorage.js'></script>
+    <script type='text/javascript' src='appenders/cors.js'></script>
     <script type='text/javascript' src='appenders/console.js'></script>
 </head>
 <body>

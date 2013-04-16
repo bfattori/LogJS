@@ -2,11 +2,14 @@
 
     var CORSAppender = function(config) {
         LogJS.BaseAppender.call(this);
-        this.xhr = new global.XMLHttpRequest();
-
+        this.xhr = config.__xhr;
         this.config = {
-            targetUrl: this.configOpt('targetUrl', config, '')
+            targetUrl: this.configOpt('targetUrl', config, ''),
+            timeoutInterval: this.configOpt('timeoutInterval', config, 3000)
         };
+
+        this.buffer = [];
+        this.timeout = undefined;
     };
 
     CORSAppender.prototype = Object.create(LogJS.BaseAppender.prototype);
@@ -15,18 +18,34 @@
 
     CORSAppender.prototype.log = function(type, timestamp, message, url, lineNumber) {
         var logObject = { 't': type, 'ts': timestamp, 'm': message, 'u': url, 'l': lineNumber};
-        var jsonString = JSON.stringify(logObject);
+        this.buffer.push(logObject);
+
+        global.clearTimeout(this.timeout);
+        var CAppender = this;
+        this.timeout = global.setTimeout(function() {
+            CAppender.sendBuffer();
+            CAppender.timeout = undefined;
+        }, this.timeoutInterval);
+    };
+
+    CORSAppender.prototype.sendBuffer = function() {
+        var jsonString = JSON.stringify(this.buffer);
 
         if (this.config.targetUrl !== '') {
             this.xhr.open('POST', this.config.targetUrl, true);
             this.xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
-            this.xhr.setRequestHeader("Content-length", jsonString.length);
             this.xhr.send(jsonString);
         }
+
+        this.buffer = [];
     };
 
-    if (global.XMLHttpRequest && ('withCredentials' in global.XMLHttpRequest)) {
-        LogJS.addAppender(CORSAppender);
+    if (global.XMLHttpRequest) {
+        var xhr = new global.XMLHttpRequest();
+        if ("withCredentials" in xhr) {
+            LogJS.config.__xhr = xhr;
+            LogJS.addAppender(CORSAppender);
+        }
     }
 
 })(LogJS, this);
