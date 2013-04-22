@@ -34,13 +34,20 @@
         }
     }
 
+    function scrub(text) {
+        return text.replace(/\s*/, '&nbsp;').replace('>', '&gt;').replace('<', '&lt;');
+    }
+
     var DOMAppender = function(config) {
         LogJS.BaseAppender.call(this);
 
         this.config = {
+            maxLogs: 200,
             font: this.configOpt('font', config, '"Lucida Console", "Courier New", sans-serif'),
             fontSize: this.configOpt('fontSize', config, '10pt')
         };
+
+        this.lines = [];
 
         var logger = domEl('div', 'logjs_logger', {
             position: 'fixed', bottom: '0',
@@ -169,7 +176,7 @@
             case LogJS.INFO:    classStr = 'info'; break;
         }
 
-        var text = '[' + new Date(timestamp).toString() + '] ' + message +
+        var text = '[' + new Date(timestamp).toString() + '] ' + scrub(message) +
             (url !== undefined ? ' (<a href="' + url + '" target="_blank">' + url + '</a>) ' : '') +
             (lineNumber !== undefined ? '@ ' + lineNumber : '');
         this.logLine(classStr, text);
@@ -179,6 +186,11 @@
         var logLine = domEl('div', styleClass);
         logLine.innerHTML = text;
         this.logDiv.appendChild(logLine);
+        this.lines.push(logLine);
+
+        if (this.lines.length > this.config.maxLogs) {
+            this.logDiv.removeChild(this.lines.shift());
+        }
     };
 
     if (global.document.createElement) {

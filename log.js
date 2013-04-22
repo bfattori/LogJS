@@ -4,7 +4,6 @@
         ERROR: 'ERROR',
         WARN: 'WARN',
         INFO: 'INFO',
-        TRACE: 'TRACE',
 
         version: 'LogJS v1.0.0'
     };
@@ -29,8 +28,10 @@
     }
 
     global.onerror = function(message, url, lineNumber) {
-        log(LogJS.ERROR, message, url, lineNumber);
-        gErrorHandler(message, url, lineNumber);
+        log(LogJS.ERROR, '[EXCEPTION] ' + message, url, lineNumber);
+        if (gErrorHandler) {
+            gErrorHandler(message, url, lineNumber);
+        }
     };
 
     // --------------------------------------------------------------------------------------------------
@@ -76,6 +77,12 @@
             }
         }
         return registered;
+    };
+
+    LogJS.addPlugin = function(clazz) {
+        if (LogJS[clazz.toString()] === undefined) {
+            LogJS[clazz.toString()] = clazz;
+        }
     };
 
     Object.defineProperty(LogJS, 'config', {

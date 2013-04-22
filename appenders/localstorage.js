@@ -50,6 +50,18 @@
         }
     };
 
+    LocalStorageAppender.prototype.deserialize = function() {
+        return JSON.parse(global.localStorage.getItem('LogJS'));
+    };
+
+    LocalStorageAppender.prototype.clear = function() {
+        global.localStorage.removeItem('LogJS');
+        global.localStorage.removeItem('LogJS_size');
+        this.logRollSize = 0;
+        this.logRoll.length = 0;
+        this.changed = false;
+    };
+
     if (global.localStorage) {
         LogJS.addAppender(LocalStorageAppender);
     }
