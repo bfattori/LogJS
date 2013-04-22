@@ -17,8 +17,8 @@ is probably for you.
 
 ## Ok, so convince me!
 
-LogJS is 3k uncompressed and less than 1k compressed and minified.  It doesn't require jQuery or any other
-third party libraries.  It comes with three simple appenders which can be used together or standalone.
+LogJS is 4k uncompressed and less than 1k compressed and minified.  It doesn't require jQuery or any other
+third party libraries.  It comes with four simple appenders which can be used together or standalone.
 It's easy to write new appenders.  It's not carrying around baggage to make it compatible with old
 browsers from days gone by.  It has a set of tests to make sure it keeps on working.
 
