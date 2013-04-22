@@ -10,7 +10,7 @@
         WARN: 'WARN',
         INFO: 'INFO',
 
-        version: 'LogJS v1.0.0'
+        version: 'LogJS v1.1.0'
     };
 
     var appenders = {};
@@ -124,5 +124,22 @@
         enumerable: false
     });
 
-    global.LogJS = LogJS;
+    // Exports
+    // -------
+
+    // AMD
+    if (typeof define !== 'undefined' && define.amd) {
+        define([], function () {
+            return LogJS;
+        });
+    }
+    // CommonJS
+    else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = LogJS;
+    }
+    // Script tag
+    else {
+        global.LogJS = LogJS;
+    }
+
 })(this);
