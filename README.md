@@ -79,4 +79,4 @@ Firefox 19+ for OSX, and Safari 6+ for OSX.
 
 ## Questions or Comments?
 
-You can contact me at &#98;f&#97;&#116;&#116;&#114;&#105;&#64;&#103;m;&#97;&#105;&#108;&#46;&#99;o&#109;
+You can contact me at &#98;f&#97;&#116;&#116;o&#114;&#105;&#64;&#103;m&#97;&#105;&#108;&#46;&#99;o&#109;
