@@ -1,3 +1,8 @@
+/**
+ * LogJS (c)2013 Brett Fattori
+ * Lightweight JavaScript logging framework
+ * MIT Licensed
+ */
 (function(global, undefined){
 
     var LogJS = {

@@ -6,7 +6,7 @@ Lightweight logging for JavaScript
 
 Why would anyone want another logging framework for JavaScript?  What's the point when there are
 perfectly good solutions such as Log4JS and Log4Javascript?  Well, that's always a complicated
-answer, but my reasonsing was this:
+answer, but my reasons were these:
 
 The two projects mentioned are trying to emulate log4j for the Java platform.  Who needs all that
 functionality when all that I really want to do is log messages?  If you need something which
@@ -71,3 +71,12 @@ set the interval between serializations and the maximum size of the buffer to ma
     </script>
     <script type='text/javascript' src='appenders/localstorage.js'></script>
     
+## Compatibility
+
+Due to the use of `Object.defineProperty()` and `Date.now`, this library doesn't work with IE8, Firefox 3.5 or 3.6,
+or Opera 10.5-11.5.  All other browsers should work just fine.  It has been officially tested with Chrome 23+ for OSX,
+Firefox 19+ for OSX, and Safari 6+ for OSX.
+
+## Questions or Comments?
+
+You can contact me at &#98;f&#97;&#116;&#116;&#114;&#105;&#64;&#103;m;&#97;&#105;&#108;&#46;&#99;o&#109;
