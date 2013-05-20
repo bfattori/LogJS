@@ -10,7 +10,7 @@
         WARN: 'WARN',
         INFO: 'INFO',
 
-        version: 'LogJS v1.1.0'
+        version: 'LogJS v1.2.0'
     };
 
     var appenders = {};

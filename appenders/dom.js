@@ -35,16 +35,16 @@
     }
 
     function scrub(text) {
-        return text.replace(/\s*/, '&nbsp;').replace('>', '&gt;').replace('<', '&lt;');
+        return text.replace(/ /g, '&nbsp;').replace('>', '&gt;').replace('<', '&lt;').replace(/\n/g, '<br/>');
     }
 
     var DOMAppender = function(config) {
         LogJS.BaseAppender.call(this);
 
         this.config = {
-            maxLogs: 200,
             font: this.configOpt('font', config, '"Lucida Console", "Courier New", sans-serif'),
-            fontSize: this.configOpt('fontSize', config, '10pt')
+            fontSize: this.configOpt('fontSize', config, '10pt'),
+            maxLogs: this.configOpt('maxLogs', config, 200)
         };
 
         this.lines = [];

@@ -9,7 +9,7 @@
         this.changed = false;
         this.config = {
             timeoutInterval: this.configOpt('timeoutInterval', config, 10000),
-            maxSize: this.configOpt('timeoutInterval', config, 4 * 1024 * 1024)
+            maxSize: this.configOpt('maxSize', config, 4 * 1024 * 1024)
         };
 
         var LSAppender = this;
