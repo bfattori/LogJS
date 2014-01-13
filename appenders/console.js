@@ -28,10 +28,12 @@
             args.push(lineNumber);
         }
 
-        method.apply(global.console, args);
+        if (global.console[method] !== undefined) {
+            method.apply(global.console, args);
+        }
     };
 
-    if (global.console) {
+    if (global.console !== undefined) {
         LogJS.addAppender(ConsoleAppender);
     }
 
