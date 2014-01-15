@@ -6,7 +6,7 @@ affect these appenders.
 
 ## CORSAppender
 * `targetUrl` - The URL where the server is located.  Does not need to be the same origin as the web app, but it must be able to accept connections from the web app's server.
-* `timeoutInterval` - The interval, in milliseconds, at which items are spooled to the server.  This should be between half a second and, at most, three seconds.  Defaults to *3000*
+* `timeoutInterval` - The interval, in milliseconds, at which items are spooled to the server.  This should be between half a second and, at most, three seconds.  Default: *3000*
 
 ## DOMAppender
 * `font` - The font to use in the DOM element used to display log messages.  Default: *"Lucida Console", "Courier New", sans-serif*
@@ -15,7 +15,7 @@ affect these appenders.
 
 ## LocalStorageAppender
 * `timeoutInterval` - How often the logs are spooled to localStorage, in milliseconds. Default: *10000*
-* `maxSize` - The maximum size of the log, in bytes.  Once the log exceeds this amount, old log messages are removed. Default *4Mb*
+* `maxSize` - The maximum size of the log, in bytes.  Once the log exceeds this amount, old log messages are removed. Default *2Mb*
 
 ### Creating the Configuration
 

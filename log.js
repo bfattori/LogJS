@@ -6,11 +6,13 @@
 (function(global, undefined){
 
     var LogJS = {
+        EXCEPTION: 'EXCEPTION',
         ERROR: 'ERROR',
         WARN: 'WARN',
         INFO: 'INFO',
 
-        version: 'LogJS v1.2.1'
+        version: 'LogJS v1.2.1',
+        window_: global
     };
 
     var appenders = {};
@@ -19,6 +21,19 @@
     // appenders to perform the actual logging.
     var log = function (type, message, url, lineNumber) {
         var now = new Date().getTime();
+
+        if (message instanceof Error) {
+            if (message.stack) {
+                message = (message.message && message.stack.indexOf(message.message) === -1) ?
+                    message.message + "\n" + message.stack :
+                    message.stack;
+            } else if (message.sourceURL) {
+                message = message.message;
+                url = message.sourceURL;
+                lineNumber = message.line;
+            }
+        }
+
         for (var appender in appenders) {
             if (appenders.hasOwnProperty(appender)) {
                 appenders[appender].log(type, now, message, url, lineNumber);
@@ -27,13 +42,15 @@
     };
 
     // Redirect the onerror handler for the global object (if it exists)
+    var win = LogJS.window_;
+
     var gErrorHandler;
-    if (global.onerror !== undefined) {
-        gErrorHandler = global.onerror;
+    if (win.onerror !== undefined) {
+        gErrorHandler = win.onerror;
     }
 
-    global.onerror = function(message, url, lineNumber) {
-        log(LogJS.ERROR, '[EXCEPTION] ' + message, url, lineNumber);
+    win.onerror = function onErrorLogJS(message, url, lineNumber) {
+        log(LogJS.EXCEPTION, message, url, lineNumber);
         if (gErrorHandler) {
             gErrorHandler(message, url, lineNumber);
         }
@@ -126,6 +143,59 @@
 
     // Exports
     // -------
+
+    // Angular
+    if (typeof angular !== 'undefined') {
+
+        LogJS.config.global = {
+            debug: true
+        };
+
+        function LogJSProvider() {
+            this.config = LogJS.config;
+            var self = this;
+
+            this.debugEnabled = function(flag) {
+                if (typeof flag !== 'undefined') {
+                    this.config.global = {
+                        debug: flag
+                    };
+                    return this;
+                } else {
+                    return this.config.global.debug;
+                }
+            };
+
+            this.$get = function() {
+                return {
+                    error: function() {
+                        LogJS.error.apply(LogJS, arguments);
+                    },
+                    info: function() {
+                        LogJS.info.apply(LogJS, arguments);
+                    },
+                    debug: function() {
+                        if (self.config.global.debug) {
+                            LogJS.info.apply(LogJS, arguments);
+                        }
+                    },
+                    log: function() {
+                        LogJS.info.apply(LogJS, arguments);
+                    },
+                    warn: function() {
+                        LogJS.warn.apply(LogJS, arguments);
+                    }
+                };
+            };
+        }
+
+//        var ng = angular.module('ng', ['$provide', function($provide) {
+//            $provide.provider('$log', LogJSProvider);
+//        }]);
+
+        angular.module('ng').provider('$log', LogJSProvider);
+
+    }
 
     // AMD
     if (typeof define !== 'undefined' && define.amd) {

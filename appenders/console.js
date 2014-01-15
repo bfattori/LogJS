@@ -28,7 +28,7 @@
             args.push(lineNumber);
         }
 
-        if (global.console[method] !== undefined) {
+        if (method !== undefined) {
             method.apply(global.console, args);
         }
     };

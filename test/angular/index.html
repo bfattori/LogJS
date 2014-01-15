@@ -1,0 +1,24 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.js"></script>
+
+    <!-- This overrides Angular's built-in $log with LogJS.  If you remove these two lines,
+         logging will still work, per Angular's $log service. -->
+    <!--<script type="text/javascript" src="../../log.js"></script>-->
+    <script type="text/javascript" src="../../appenders/console.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module('testlog', []);
+        module.controller('TestLogController', function($scope, $log) {
+            $log.log('Hello log!');
+            $log.debug('Hello debug!');
+            $log.info('Hello info!');
+            $log.warn('Hello warn!');
+            $log.error('Hello error!');
+        });
+    </script>
+</head>
+<body ng-app="testlog">
+    <div ng-controller="TestLogController"></div>
+</body>
+</html>

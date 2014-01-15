@@ -4,7 +4,8 @@ describe('LogJS', function() {
         expect(LogJS).toBeDefined();
     });
 
-    it('should have 3 logging levels', function() {
+    it('should have 4 logging levels', function() {
+        expect(LogJS.EXCEPTION).toBe('EXCEPTION');
         expect(LogJS.ERROR).toBe('ERROR');
         expect(LogJS.WARN).toBe('WARN');
         expect(LogJS.INFO).toBe('INFO');
