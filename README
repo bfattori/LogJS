@@ -1,1 +1,2 @@
-A lightweight JavaScript logging library
+A lightweight JavaScript logging library.  Includes support to override the
+$log service in Angular JS.

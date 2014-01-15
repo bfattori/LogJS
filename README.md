@@ -2,6 +2,8 @@ LogJS
 =====
 Lightweight logging for JavaScript
 
+_Now with AngularJS support!_
+
 ## What is this?
 
 Why would anyone want another logging framework for JavaScript?  What's the point when there are
@@ -76,6 +78,11 @@ set the interval between serializations and the maximum size of the buffer to ma
 Due to the use of `Object.defineProperty()` and `Date.now`, this library doesn't work with IE8, Firefox 3.5 or 3.6,
 or Opera 10.5-11.5.  All other browsers should work just fine.  It has been officially tested with Chrome 23+ for OSX,
 Firefox 19+ for OSX, and Safari 6+ for OSX.
+
+## Using with AngularJS
+
+The only requirement is to load AngularJS _before_ you load LogJS and appenders.  See `/test/angular/index.html`
+for a quick and dirty example of AngularJS integration.
 
 ## Questions or Comments?
 
