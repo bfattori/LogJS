@@ -11,7 +11,7 @@
         WARN: 'WARN',
         INFO: 'INFO',
 
-        version: 'LogJS v1.2.1',
+        version: 'LogJS v1.2.2',
         window_: global
     };
 
@@ -81,12 +81,6 @@
         }
     };
 
-    LogJS.removeAppender = function(appender) {
-        if (appender !== undefined) {
-            delete appenders[appender.name];
-        }
-    };
-
     LogJS.getAppender = function(appenderName) {
         return appenders[appenderName];
     };
@@ -99,12 +93,6 @@
             }
         }
         return registered;
-    };
-
-    LogJS.addPlugin = function(clazz) {
-        if (LogJS[clazz.toString()] === undefined) {
-            LogJS[clazz.toString()] = clazz;
-        }
     };
 
     Object.defineProperty(LogJS, 'config', {
@@ -141,9 +129,6 @@
         enumerable: false
     });
 
-    // Exports
-    // -------
-
     // Angular
     if (typeof angular !== 'undefined') {
 
@@ -167,35 +152,29 @@
             };
 
             this.$get = function() {
-                return {
-                    error: function() {
-                        LogJS.error.apply(LogJS, arguments);
-                    },
-                    info: function() {
-                        LogJS.info.apply(LogJS, arguments);
-                    },
-                    debug: function() {
-                        if (self.config.global.debug) {
-                            LogJS.info.apply(LogJS, arguments);
-                        }
-                    },
-                    log: function() {
-                        LogJS.info.apply(LogJS, arguments);
-                    },
-                    warn: function() {
-                        LogJS.warn.apply(LogJS, arguments);
+                var angularLogJS = {};
+                ['error','info','debug','log','warn'].forEach(function(e) {
+                    var method = LogJS.info;
+                    if (LogJS[e]) {
+                        method = LogJS[e];
                     }
-                };
+                    angularLogJS[e] = (function(method, e) {
+                        return function() {
+                            if (e !== 'debug' || self.config.global.debug) {
+                                method.apply(LogJS, arguments);
+                            }
+                        }
+                    })(method, e);
+                });
+                return angularLogJS;
             };
         }
 
-//        var ng = angular.module('ng', ['$provide', function($provide) {
-//            $provide.provider('$log', LogJSProvider);
-//        }]);
-
         angular.module('ng').provider('$log', LogJSProvider);
-
     }
+
+    // Exports
+    // -------
 
     // AMD
     if (typeof define !== 'undefined' && define.amd) {

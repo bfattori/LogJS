@@ -19,8 +19,6 @@ describe('LogJS', function() {
 
     it('should have methods to add, remove, and get appenders', function() {
         expect(LogJS.addAppender).toBeDefined();
-        expect(LogJS.removeAppender).toBeDefined();
-        expect(LogJS.getAppender).toBeDefined();
         expect(LogJS.getRegisteredAppenders).toBeDefined();
     });
 
@@ -41,20 +39,12 @@ describe('LogJS', function() {
             };
 
             spyOn(LogJS, 'addAppender').andCallThrough();
-            spyOn(LogJS, 'removeAppender').andCallThrough();
         });
 
         it('should register a new appender', function() {
             LogJS.addAppender(DummyAppender);
             expect(LogJS.addAppender).toHaveBeenCalled();
             expect(LogJS.getRegisteredAppenders().length).toBeGreaterThan(0);
-        });
-
-        it('should remove the new appender', function() {
-            var dummy = LogJS.getAppender("DummyAppender");
-            LogJS.removeAppender(dummy);
-            expect(LogJS.removeAppender).toHaveBeenCalled();
-            expect(LogJS.getRegisteredAppenders().length).toBe(0);
         });
 
         it('should NOT register a new appender', function() {
@@ -64,7 +54,7 @@ describe('LogJS', function() {
             };
 
             LogJS.addAppender(FakeAppender);
-            expect(LogJS.getRegisteredAppenders().length).toBe(0);
+            expect(LogJS.getRegisteredAppenders().length).toBe(1);
         });
     });
 });
