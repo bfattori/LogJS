@@ -1,0 +1,11 @@
+{
+    "name": "LogJS",
+    "version": "1.2.2",
+    "main": "dist/log.js",
+    "ignore": [
+        ".gitignore",
+        "**/*.jstd",
+        "index.html",
+        "projectFilesBackup/"
+    ]
+}
