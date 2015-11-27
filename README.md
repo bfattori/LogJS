@@ -65,11 +65,15 @@ You can add as many, or as few, appenders as you want or need.
 ## Configuration of Appenders
 
 Some appenders require some configuration options to run, such as the `LocalStorageAppender`.  You can
-set the interval between serializations and the maximum size of the buffer to maintain.  For example:
+set the interval between serializations and the maximum size of the buffer to maintain. It's important
+to note that the configuration for the appender is undefined, but should be passed as an object like below.
+For example:
 
     <script type='text/javascript' src='log.js'></script>
     <script type='text/javascript'>
-       LogJS.config.LocalStorageAppender.maxSize = 1 * 1024 * 1024;  // 1 megabyte
+       LogJS.config.LocalStorageAppender = {
+          maxSize: 1 * 1024 * 1024  // 1 megabyte
+       };
     </script>
     <script type='text/javascript' src='appenders/localstorage.js'></script>
     
